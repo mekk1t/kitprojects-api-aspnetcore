@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>KitProjects.Api.AspNetCore</AssemblyName>
+    <RootNamespace>KitProjects.Api.AspNetCore</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Набор инструментов для быстрой настройки API. Включает в себя документацию Swagger, подключение основных сервисов ASP.NET Core для работы с API, а также унификацию ответов от сервера.</Description>
+    <PackageReleaseNotes>Начало положено! Посмотрим, насколько мне удастся развить эту библиотеку.</PackageReleaseNotes>
+    <PackageTags>API, aspnetcore, swagger, swagger-ui, jsonapi</PackageTags>
+    <Authors>mekk1t</Authors>
+    <Company>mekk1t</Company>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\KitProjects.Api.AspNetCore.xml</DocumentationFile>
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\KitProjects.Api.AspNetCore.xml</DocumentationFile>
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+  </ItemGroup>
+
+</Project>
