@@ -7,10 +7,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Набор инструментов для быстрой настройки API. Включает в себя документацию Swagger, подключение основных сервисов ASP.NET Core для работы с API, а также унификацию ответов от сервера.</Description>
-    <PackageReleaseNotes>Начало положено! Посмотрим, насколько мне удастся развить эту библиотеку.</PackageReleaseNotes>
+    <PackageReleaseNotes>Исправлен метод добавления XML-документации.</PackageReleaseNotes>
     <PackageTags>API, aspnetcore, swagger, swagger-ui, jsonapi</PackageTags>
     <Authors>mekk1t</Authors>
     <Company>mekk1t</Company>
+    <Version>1.0.1</Version>
+    <PackageIcon>api.png</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,6 +29,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\admin\Downloads\api.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

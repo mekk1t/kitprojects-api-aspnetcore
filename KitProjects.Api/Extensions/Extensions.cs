@@ -8,7 +8,6 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace KitProjects.Api.AspNetCore.Extensions
@@ -21,15 +20,20 @@ namespace KitProjects.Api.AspNetCore.Extensions
         /// <summary>
         /// Добавляет Swagger-документацию для API версии 1. Включает XML-документацию для сборки веб-приложения.
         /// </summary>
+        /// <remarks>
+        /// Для использования XML-документации из других сборок, нужно предоставить путь к каждому XML-файлу отдельно
+        /// через метод <c>.IncludeXmlComments()</c>.
+        /// </remarks>
         /// <param name="services">Коллекция сервисов DI ASP.NET Core.</param>
         /// <param name="title">Название API.</param>
+        /// <param name="xmlDocumentationFileName">Название XML-файла документации без расширения.</param>
         /// <param name="setupAction">Настройка генерации Swagger.</param>
-        public static void AddSwaggerV1(this IServiceCollection services, string title, Action<SwaggerGenOptions> setupAction = null)
+        public static void AddSwaggerV1(this IServiceCollection services, string title, string xmlDocumentationFileName, Action<SwaggerGenOptions> setupAction = null)
         {
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc("v1", new OpenApiInfo { Title = title, Version = "v1" });
-                var xmlDocPath = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+                var xmlDocPath = Path.Combine(AppContext.BaseDirectory, $"{xmlDocumentationFileName}.xml");
                 config.IncludeXmlComments(xmlDocPath);
                 setupAction?.Invoke(config);
             });
