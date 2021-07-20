@@ -7,11 +7,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Набор инструментов для быстрой настройки API. Включает в себя документацию Swagger, подключение основных сервисов ASP.NET Core для работы с API, а также унификацию ответов от сервера.</Description>
-    <PackageReleaseNotes>Исправлен метод добавления XML-документации.</PackageReleaseNotes>
+    <PackageReleaseNotes>Включена XML-документация самой библиотеку в итоговую Swagger-документацию.</PackageReleaseNotes>
     <PackageTags>API, aspnetcore, swagger, swagger-ui, jsonapi</PackageTags>
     <Authors>mekk1t</Authors>
     <Company>mekk1t</Company>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageIcon>api.png</PackageIcon>
     <PackageIconUrl />
   </PropertyGroup>
