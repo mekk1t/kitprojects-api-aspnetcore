@@ -168,5 +168,10 @@ namespace KitProjects.Api.AspNetCore
                 return ApiError(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
+
+        protected IActionResult ExecutePaginatedCollectionRequest<TResult>(Func<IEnumerable<TResult>> function)
+        {
+
+        }
     }
 }
