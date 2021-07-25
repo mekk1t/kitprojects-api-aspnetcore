@@ -82,38 +82,6 @@ namespace KitProjects.Api.AspNetCore
         }
 
         /// <summary>
-        /// Обрабатывает запрос данных на сервер и оборачивает ошибки в <see cref="ApiErrorResponse"/>.
-        /// </summary>
-        /// <param name="function">Функция, возвращающая ответ в формате <typeparamref name="TResult"/>.</param>
-        /// <returns>
-        /// Если <paramref name="function"/> возвращает какие-либо данные,
-        /// то ответ сервера со статус-кодом <see cref="HttpStatusCode.OK"/> и телом ответа <typeparamref name="TResult"/>.
-        /// <br></br>
-        /// Иначе <see cref="ApiErrorResponse"/> со статус-кодом <see cref="HttpStatusCode.NotFound"/>.
-        /// </returns>
-        protected IActionResult ProcessRequest<TResult>(Func<TResult> function)
-        {
-            try
-            {
-                var result = function();
-                if (result == null)
-                    return ApiError("Не удалось получить данные по запросу.", HttpStatusCode.NotFound);
-
-                return Ok(result);
-            }
-            catch (NullReferenceException ex)
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError("Произошла ошибка на стороне сервера.", HttpStatusCode.InternalServerError);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
-            }
-        }
-
-        /// <summary>
         /// Обрабатывает запрос на информацию об одиночном объекте. Ответ заворачивается в <see cref="ApiObjectResponse{T}"/>.
         /// </summary>
         /// <remarks>
