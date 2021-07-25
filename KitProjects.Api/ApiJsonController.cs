@@ -61,7 +61,7 @@ namespace KitProjects.Api.AspNetCore
         /// <param name="action">Набор действий для обработки.</param>
         /// <param name="statusCode">Статус-код ответа.</param>
         /// <returns>Ответ сервера со статус-кодом <see cref="HttpStatusCode.NoContent"/> и пустым телом.</returns>
-        protected IActionResult ProcessRequest(Action action, HttpStatusCode statusCode = HttpStatusCode.NoContent)
+        protected IActionResult ExecuteAction(Action action, HttpStatusCode statusCode = HttpStatusCode.NoContent)
         {
             try
             {
@@ -104,6 +104,36 @@ namespace KitProjects.Api.AspNetCore
             {
                 _logger.LogError(ex.ToString());
                 return ApiError("Произошла ошибка на стороне сервера.", HttpStatusCode.InternalServerError);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
+            }
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на информацию об одиночном объекте. Ответ заворачивается в <see cref="ApiObjectResponse{T}"/>.
+        /// </summary>
+        /// <remarks>
+        /// Если объект равен <see langword="null"/>, возвращается сообщение об ошибке со статус-кодом <see cref="HttpStatusCode.NotFound"/>. <br></br>
+        /// Прочие ошибки обрабатываются и логгируются - возвращается сообщение об ошибке со статусо-кодом <see cref="HttpStatusCode.InternalServerError"/>.
+        /// </remarks>
+        /// <typeparam name="TResult">Тип данных объекта.</typeparam>
+        /// <param name="function">Функция, которая выдает запрашиваемый объект.</param>
+        /// <returns>
+        /// <see cref="OkObjectResult"/> с телом запроса в формате <typeparamref name="TResult" />,
+        /// обернутым в <see cref="ApiObjectResponse{TResult}"/>.
+        /// </returns>
+        protected IActionResult ExecuteObjectRequest<TResult>(Func<TResult> function)
+        {
+            try
+            {
+                var result = function();
+                if (result == null)
+                    return ApiError("Не удалось получить данные по запросу.", HttpStatusCode.NotFound);
+
+                return Ok(new ApiObjectResponse<TResult>(result));
             }
             catch (Exception ex)
             {
