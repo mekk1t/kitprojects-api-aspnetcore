@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace KitProjects.Api.AspNetCore
@@ -134,6 +136,31 @@ namespace KitProjects.Api.AspNetCore
                     return ApiError("Не удалось получить данные по запросу.", HttpStatusCode.NotFound);
 
                 return Ok(new ApiObjectResponse<TResult>(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
+            }
+        }
+
+        /// <summary>
+        /// Обрабатывает запрос на получение статической коллекции данных в формате <typeparamref name="TResult"/>.
+        /// Итоговая коллекция будет обернута в <see cref="ApiCollectionResponse{T}"/>.
+        /// </summary>
+        /// <remarks>
+        /// Этот метод никогда не вернет в коллекции данных <see langword="null"/>. Пустые или <see langword="null"/>-коллекции будут
+        /// обернуты в пустой массив данных.
+        /// </remarks>
+        /// <typeparam name="TResult">Тип данных в результирующей коллекции.</typeparam>
+        /// <param name="function">Функция, выдающая коллекцию данных.</param>
+        /// <returns>Коллекцию данных в формате <typeparamref name="TResult"/>, обернутую в <see cref="ApiCollectionResponse{T}"/>.</returns>
+        protected IActionResult ExecuteCollectionRequest<TResult>(Func<IEnumerable<TResult>> function)
+        {
+            try
+            {
+                var result = function();
+                return Ok(new ApiCollectionResponse<TResult>(result));
             }
             catch (Exception ex)
             {

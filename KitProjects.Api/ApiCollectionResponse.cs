@@ -25,7 +25,7 @@ namespace KitProjects.Api.AspNetCore
         /// <summary>
         /// Создает ответ от сервера для статической коллекции данных.
         /// </summary>
-        /// <param name="items"></param>
+        /// <param name="items">Коллекция данных. Для пустой коллекции можно подать <see langword="null"/>.</param>
         public ApiCollectionResponse(IEnumerable<T> items) => Items = items ?? Array.Empty<T>();
 
         /// <summary>
