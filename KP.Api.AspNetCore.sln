@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31402.337
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitProjects.Api.AspNetCore", "KitProjects.Api\KitProjects.Api.AspNetCore.csproj", "{1B0115E4-CF88-48C4-9284-0BB8820C705F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KP.Api.AspNetCore", "KitProjects.Api\KP.Api.AspNetCore.csproj", "{1B0115E4-CF88-48C4-9284-0BB8820C705F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
