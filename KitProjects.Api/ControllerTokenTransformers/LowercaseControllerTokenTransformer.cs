@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 
-namespace KP.MasterChef.WebApplication
+namespace KP.Api.AspNetCore.ControllerTokenTransformers
 {
     /// <summary>
     /// Приводит токен контроллера к нижнему регистру.
