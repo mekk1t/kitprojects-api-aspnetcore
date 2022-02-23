@@ -63,11 +63,11 @@ namespace KP.Api.AspNetCore
         /// <param name="statusCode">Статус-код ответа.</param>
         /// <returns>Ответ сервера со статус-кодом <see cref="HttpStatusCode.NoContent"/> и пустым телом.</returns>
         protected IActionResult ExecuteAction(Action action, HttpStatusCode statusCode = HttpStatusCode.NoContent) =>
-            LoggerWrap(() =>
+            Wrap(() => LoggerWrap(() =>
             {
                 action();
                 return StatusCode((int)statusCode);
-            });
+            }));
 
         /// <summary>
         /// Обрабатывает запрос на информацию об одиночном объекте. Ответ заворачивается в <see cref="ApiObjectResponse{T}"/>.
@@ -83,14 +83,14 @@ namespace KP.Api.AspNetCore
         /// обернутым в <see cref="ApiObjectResponse{TResult}"/>.
         /// </returns>
         protected IActionResult ExecuteObjectRequest<TResult>(Func<TResult> function) =>
-            LoggerWrap(() =>
+            Wrap(() => LoggerWrap(() =>
             {
                 var result = function();
                 if (result == null)
                     return ApiError("Не удалось получить данные по запросу.", HttpStatusCode.NotFound);
 
                 return Ok(new ApiObjectResponse<TResult>(result));
-            });
+            }));
 
         /// <summary>
         /// Обрабатывает запрос на получение статической коллекции данных в формате <typeparamref name="TResult"/>.
@@ -104,11 +104,18 @@ namespace KP.Api.AspNetCore
         /// <param name="function">Функция, выдающая коллекцию данных.</param>
         /// <returns>Коллекцию данных в формате <typeparamref name="TResult"/>, обернутую в <see cref="ApiCollectionResponse{T}"/>.</returns>
         protected IActionResult ExecuteCollectionRequest<TResult>(Func<IEnumerable<TResult>> function) =>
-            LoggerWrap(() =>
+            Wrap(() => LoggerWrap(() =>
             {
                 var result = function();
                 return Ok(new ApiCollectionResponse<TResult>(result));
-            });
+            }));
+
+        /// <summary>
+        /// Обрабатывает получение <see cref="IActionResult"/>.
+        /// </summary>
+        /// <param name="getActionResult">Функция, возвращающая <see cref="IActionResult"/>.</param>
+        /// <returns>Ответ API в формате <see cref="IActionResult"/>.</returns>
+        protected abstract IActionResult Wrap(Func<IActionResult> getActionResult);
 
         private IActionResult LoggerWrap(Func<IActionResult> getActionResult)
         {
