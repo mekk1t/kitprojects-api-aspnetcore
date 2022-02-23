@@ -19,14 +19,17 @@ namespace KP.Api.AspNetCore
     public abstract class ApiJsonController : ControllerBase
     {
         private readonly ILogger<ApiJsonController> _logger;
+        private readonly bool _catchAllExceptions;
 
         /// <summary>
         /// Создает объект <see cref="ApiJsonController"/>.
         /// </summary>
         /// <param name="logger">Логгер для учета ошибок.</param>
-        protected ApiJsonController(ILogger<ApiJsonController> logger)
+        /// <param name="catchAllExceptions">Ловить все исключения?</param>
+        protected ApiJsonController(ILogger<ApiJsonController> logger, bool catchAllExceptions = false)
         {
             _logger = logger;
+            _catchAllExceptions = catchAllExceptions;
         }
 
         /// <summary>
@@ -128,7 +131,7 @@ namespace KP.Api.AspNetCore
                 _logger.LogError(ex, ex.ToString());
                 return ApiError("Произошла ошибка на стороне сервера", HttpStatusCode.InternalServerError);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (_catchAllExceptions)
             {
                 _logger.LogError(ex, ex.ToString());
                 return ApiError(ex.Message, HttpStatusCode.InternalServerError);
