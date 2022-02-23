@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace KitProjects.Api.AspNetCore
+namespace KP.Api.AspNetCore
 {
     /// <summary>
     /// Ответ от сервера для коллекции данных.

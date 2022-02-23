@@ -1,4 +1,4 @@
-﻿using KitProjects.MasterChef.WebApplication;
+﻿using KP.MasterChef.WebApplication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
-namespace KitProjects.Api.AspNetCore.Extensions
+namespace KP.Api.AspNetCore.Extensions
 {
     /// <summary>
     /// Класс расширений конфигурации API.

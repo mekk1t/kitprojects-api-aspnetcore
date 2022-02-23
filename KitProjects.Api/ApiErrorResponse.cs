@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KitProjects.Api.AspNetCore
+namespace KP.Api.AspNetCore
 {
     /// <summary>
     /// Ответ от сервера с информацией об ошибках.

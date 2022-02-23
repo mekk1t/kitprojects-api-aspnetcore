@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace KitProjects.Api.AspNetCore
+namespace KP.Api.AspNetCore
 {
     /// <summary>
     /// Базовый API контроллер, который принимает и отдает данные в формате application/json.

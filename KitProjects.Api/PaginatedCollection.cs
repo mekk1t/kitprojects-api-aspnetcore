@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace KitProjects.Api.AspNetCore
+namespace KP.Api.AspNetCore
 {
     /// <summary>
     /// Класс для представления коллекции данных с параметрами пагинации.
