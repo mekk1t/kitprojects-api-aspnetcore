@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -20,16 +19,14 @@ namespace KP.Api.AspNetCore
     public abstract class ApiJsonController : ControllerBase
     {
         private readonly ILogger<ApiJsonController> _logger;
-        private readonly ApiJsonControllerOptions _options;
 
         /// <summary>
         /// Создает объект <see cref="ApiJsonController"/>.
         /// </summary>
         /// <param name="logger">Логгер для учета ошибок.</param>
-        protected ApiJsonController(ILogger<ApiJsonController> logger, IOptions<ApiJsonControllerOptions> options)
+        protected ApiJsonController(ILogger<ApiJsonController> logger)
         {
             _logger = logger;
-            _options = options.Value;
         }
 
         /// <summary>
@@ -65,24 +62,12 @@ namespace KP.Api.AspNetCore
         /// <param name="action">Набор действий для обработки.</param>
         /// <param name="statusCode">Статус-код ответа.</param>
         /// <returns>Ответ сервера со статус-кодом <see cref="HttpStatusCode.NoContent"/> и пустым телом.</returns>
-        protected IActionResult ExecuteAction(Action action, HttpStatusCode statusCode = HttpStatusCode.NoContent)
-        {
-            try
+        protected IActionResult ExecuteAction(Action action, HttpStatusCode statusCode = HttpStatusCode.NoContent) =>
+            LoggerWrap(() =>
             {
                 action();
                 return StatusCode((int)statusCode);
-            }
-            catch (NullReferenceException ex) when (_options.ExceptionPredicate(ex))
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError("Произошла ошибка на стороне сервера.", HttpStatusCode.InternalServerError);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
-            }
-        }
+            });
 
         /// <summary>
         /// Обрабатывает запрос на информацию об одиночном объекте. Ответ заворачивается в <see cref="ApiObjectResponse{T}"/>.
@@ -97,22 +82,15 @@ namespace KP.Api.AspNetCore
         /// <see cref="OkObjectResult"/> с телом запроса в формате <typeparamref name="TResult" />,
         /// обернутым в <see cref="ApiObjectResponse{TResult}"/>.
         /// </returns>
-        protected IActionResult ExecuteObjectRequest<TResult>(Func<TResult> function)
-        {
-            try
+        protected IActionResult ExecuteObjectRequest<TResult>(Func<TResult> function) =>
+            LoggerWrap(() =>
             {
                 var result = function();
                 if (result == null)
                     return ApiError("Не удалось получить данные по запросу.", HttpStatusCode.NotFound);
 
                 return Ok(new ApiObjectResponse<TResult>(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
-            }
-        }
+            });
 
         /// <summary>
         /// Обрабатывает запрос на получение статической коллекции данных в формате <typeparamref name="TResult"/>.
@@ -125,16 +103,27 @@ namespace KP.Api.AspNetCore
         /// <typeparam name="TResult">Тип данных в результирующей коллекции.</typeparam>
         /// <param name="function">Функция, выдающая коллекцию данных.</param>
         /// <returns>Коллекцию данных в формате <typeparamref name="TResult"/>, обернутую в <see cref="ApiCollectionResponse{T}"/>.</returns>
-        protected IActionResult ExecuteCollectionRequest<TResult>(Func<IEnumerable<TResult>> function)
-        {
-            try
+        protected IActionResult ExecuteCollectionRequest<TResult>(Func<IEnumerable<TResult>> function) =>
+            LoggerWrap(() =>
             {
                 var result = function();
                 return Ok(new ApiCollectionResponse<TResult>(result));
+            });
+
+        private IActionResult LoggerWrap(Func<IActionResult> getActionResult)
+        {
+            try
+            {
+                return getActionResult();
+            }
+            catch (NullReferenceException ex)
+            {
+                _logger.LogError(ex, ex.ToString());
+                return ApiError("Произошла ошибка на стороне сервера", HttpStatusCode.InternalServerError);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError(ex, ex.ToString());
                 return ApiError(ex.Message, HttpStatusCode.InternalServerError);
             }
         }
