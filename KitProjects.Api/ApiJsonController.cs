@@ -154,7 +154,7 @@ namespace KitProjects.Api.AspNetCore
                 if (result == null)
                     return Ok(new ApiCollectionResponse<TResult>(null, false));
 
-                return Ok(new ApiCollectionResponse<TResult>(result.Data, result.ThereIsMoreData));
+                return Ok(new ApiCollectionResponse<TResult>(result.Items, result.ThereAreMoreItems));
             }
             catch (Exception ex)
             {

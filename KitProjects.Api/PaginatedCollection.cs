@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace KitProjects.Api.AspNetCore
 {
@@ -13,21 +14,21 @@ namespace KitProjects.Api.AspNetCore
         /// <summary>
         /// Коллекция данных.
         /// </summary>
-        public T[] Data { get; }
+        public IEnumerable<T> Items { get; }
         /// <summary>
         /// Признак наличия данных дальше по выборке.
         /// </summary>
-        public bool ThereIsMoreData { get; }
+        public bool ThereAreMoreItems { get; }
 
         /// <summary>
         /// Создает коллекцию данных с параметрами пагинации.
         /// </summary>
         /// <param name="data">Коллекция данных.</param>
         /// <param name="thereIsMoreData">Есть ли по выборке ещё данные?</param>
-        public PaginatedCollection(T[] data, bool thereIsMoreData)
+        public PaginatedCollection(IEnumerable<T> data, bool thereIsMoreData)
         {
-            Data = data ?? Array.Empty<T>();
-            ThereIsMoreData = thereIsMoreData;
+            Items = data ?? Enumerable.Empty<T>();
+            ThereAreMoreItems = thereIsMoreData;
         }
     }
 }
