@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -19,14 +20,16 @@ namespace KP.Api.AspNetCore
     public abstract class ApiJsonController : ControllerBase
     {
         private readonly ILogger<ApiJsonController> _logger;
+        private readonly ApiJsonControllerOptions _options;
 
         /// <summary>
         /// Создает объект <see cref="ApiJsonController"/>.
         /// </summary>
         /// <param name="logger">Логгер для учета ошибок.</param>
-        protected ApiJsonController(ILogger<ApiJsonController> logger)
+        protected ApiJsonController(ILogger<ApiJsonController> logger, IOptions<ApiJsonControllerOptions> options)
         {
             _logger = logger;
+            _options = options.Value;
         }
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace KP.Api.AspNetCore
                 action();
                 return StatusCode((int)statusCode);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException ex) when (_options.ExceptionPredicate(ex))
             {
                 _logger.LogError(ex.ToString());
                 return ApiError("Произошла ошибка на стороне сервера.", HttpStatusCode.InternalServerError);
@@ -128,33 +131,6 @@ namespace KP.Api.AspNetCore
             {
                 var result = function();
                 return Ok(new ApiCollectionResponse<TResult>(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                return ApiError(ex.Message, HttpStatusCode.InternalServerError);
-            }
-        }
-
-        /// <summary>
-        /// Обрабатывает запрос на получение динамической коллекции данных с параметрами пагинации.
-        /// </summary>
-        /// <typeparam name="TResult">Тип данных в коллекции.</typeparam>
-        /// <param name="function">Функция, возвращающая динамическую коллекцию данных.</param>
-        /// <returns>
-        /// Динамическую коллекцию данных в формате <typeparamref name="TResult"/>,
-        /// обернутую в <see cref="ApiCollectionResponse{T}"/> с параметрами пагинации. <br></br>
-        /// Если <paramref name="function"/> возвращает <see langword="null"/>, то пустую коллекцию данных с дефолтными параметрами пагинации.
-        /// </returns>
-        protected IActionResult ExecutePaginatedCollectionRequest<TResult>(Func<PaginatedCollection<TResult>> function)
-        {
-            try
-            {
-                var result = function();
-                if (result == null)
-                    return Ok(new ApiCollectionResponse<TResult>(null, false));
-
-                return Ok(new ApiCollectionResponse<TResult>(result.Items, result.ThereAreMoreItems));
             }
             catch (Exception ex)
             {
